@@ -13,10 +13,10 @@ public typealias ResourceType = String
 /// A ResourceIdentifier uniquely identifies a resource that exists on the server.
 public struct ResourceIdentifier: Equatable {
 	/// The resource type.
-	var type: ResourceType
+	public var type: ResourceType
 	
 	/// The resource ID.
-	var id: String
+	public var id: String
 
 	/// Constructs a new ResourceIdentifier instance with given `type` and `id`.
 	init(type: ResourceType, id: String) {
