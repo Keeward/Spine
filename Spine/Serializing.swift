@@ -29,9 +29,9 @@ public class Serializer {
 	/// - throws: SerializerError that can occur in the deserialization.
 	///
 	/// - returns: A JSONAPIDocument
-	public func deserializeData(_ data: Data, mappingTargets: [Resource]? = nil) throws -> JSONAPIDocument {
-		let deserializeOperation = DeserializeOperation(data: data, resourceFactory: resourceFactory, valueFormatters: valueFormatters, keyFormatter: keyFormatter)
-		
+  public func deserializeData(_ data: Data, mappingTargets: [Resource]? = nil, options: DeserializationOptions? = nil) throws -> JSONAPIDocument {
+    let deserializeOperation = DeserializeOperation(data: data, resourceFactory: resourceFactory, valueFormatters: valueFormatters, keyFormatter: keyFormatter, options: options)
+
 		if let mappingTargets = mappingTargets {
 			deserializeOperation.addMappingTargets(mappingTargets)
 		}
