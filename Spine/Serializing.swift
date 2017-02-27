@@ -200,3 +200,13 @@ public struct SerializationOptions: OptionSet {
 	/// If set, then attributes with null values will not be serialized.
 	public static let OmitNullValues = SerializationOptions(rawValue: 1 << 5)
 }
+
+
+public struct DeserializationOptions: OptionSet {
+  public let rawValue: Int
+  public init(rawValue: Int) { self.rawValue = rawValue }
+
+  /// If set, the serializer will not throw `SerializerError.resourceTypeUnregistered(ResourceType)`
+  /// instead it will `Spine.logWarning`
+  public static let SkipUnregisteredType = DeserializationOptions(rawValue: 1 << 1)
+}
