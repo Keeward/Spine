@@ -82,8 +82,17 @@ class DeserializeOperation: Operation {
 		do {
 			if let data = data["data"].array {
 				var resources: [Resource] = []
+        let skipUnregisteredType = options?.contains(DeserializationOptions.SkipUnregisteredType) ?? false
 				for (index, representation) in data.enumerated() {
-					try resources.append(deserializeSingleRepresentation(representation, mappingTargetIndex: index))
+          if skipUnregisteredType {
+            do {
+              try resources.append(deserializeSingleRepresentation(representation, mappingTargetIndex: index))
+            } catch SerializerError.resourceTypeUnregistered(let resourceType) {
+              Spine.logWarning(.serializing, "Cannot perform deserialization for resource type '\(resourceType)' because it is not registered.")
+            }
+          } else {
+            try resources.append(deserializeSingleRepresentation(representation, mappingTargetIndex: index))
+          }
 				}
 				extractedPrimaryResources = resources
 			} else if let _ = data["data"].dictionary {
