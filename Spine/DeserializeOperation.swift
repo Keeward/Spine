@@ -28,6 +28,9 @@ class DeserializeOperation: Operation {
 	fileprivate var extractedLinks: [String: URL]?
 	fileprivate var extractedJSONAPI: [String: Any]?
 	fileprivate var resourcePool: [Resource] = []
+
+    // Options
+    fileprivate var options: DeserializationOptions?
 	
 	// Output
 	var result: Failable<JSONAPIDocument, SerializerError>?
@@ -35,11 +38,12 @@ class DeserializeOperation: Operation {
 	
 	// MARK: -
 	
-	init(data: Data, resourceFactory: ResourceFactory, valueFormatters: ValueFormatterRegistry, keyFormatter: KeyFormatter) {
+  init(data: Data, resourceFactory: ResourceFactory, valueFormatters: ValueFormatterRegistry, keyFormatter: KeyFormatter, options: DeserializationOptions? = nil) {
 		self.data = JSON(data: data)
 		self.resourceFactory = resourceFactory
 		self.valueFormatters = valueFormatters
 		self.keyFormatter = keyFormatter
+    self.options = options
 	}
 
 	
@@ -78,8 +82,17 @@ class DeserializeOperation: Operation {
 		do {
 			if let data = data["data"].array {
 				var resources: [Resource] = []
+        let skipUnregisteredType = options?.contains(DeserializationOptions.SkipUnregisteredType) ?? false
 				for (index, representation) in data.enumerated() {
-					try resources.append(deserializeSingleRepresentation(representation, mappingTargetIndex: index))
+          if skipUnregisteredType {
+            do {
+              try resources.append(deserializeSingleRepresentation(representation, mappingTargetIndex: index))
+            } catch SerializerError.resourceTypeUnregistered(let resourceType) {
+              Spine.logWarning(.serializing, "Cannot perform deserialization for resource type '\(resourceType)' because it is not registered.")
+            }
+          } else {
+            try resources.append(deserializeSingleRepresentation(representation, mappingTargetIndex: index))
+          }
 				}
 				extractedPrimaryResources = resources
 			} else if let _ = data["data"].dictionary {

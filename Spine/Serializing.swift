@@ -29,9 +29,9 @@ public class Serializer {
 	/// - throws: SerializerError that can occur in the deserialization.
 	///
 	/// - returns: A JSONAPIDocument
-	public func deserializeData(_ data: Data, mappingTargets: [Resource]? = nil) throws -> JSONAPIDocument {
-		let deserializeOperation = DeserializeOperation(data: data, resourceFactory: resourceFactory, valueFormatters: valueFormatters, keyFormatter: keyFormatter)
-		
+  public func deserializeData(_ data: Data, mappingTargets: [Resource]? = nil, options: DeserializationOptions? = nil) throws -> JSONAPIDocument {
+    let deserializeOperation = DeserializeOperation(data: data, resourceFactory: resourceFactory, valueFormatters: valueFormatters, keyFormatter: keyFormatter, options: options)
+
 		if let mappingTargets = mappingTargets {
 			deserializeOperation.addMappingTargets(mappingTargets)
 		}
@@ -199,4 +199,14 @@ public struct SerializationOptions: OptionSet {
     
 	/// If set, then attributes with null values will not be serialized.
 	public static let OmitNullValues = SerializationOptions(rawValue: 1 << 5)
+}
+
+
+public struct DeserializationOptions: OptionSet {
+  public let rawValue: Int
+  public init(rawValue: Int) { self.rawValue = rawValue }
+
+  /// If set, the serializer will not throw `SerializerError.resourceTypeUnregistered(ResourceType)`
+  /// instead it will `Spine.logWarning`
+  public static let SkipUnregisteredType = DeserializationOptions(rawValue: 1 << 1)
 }
