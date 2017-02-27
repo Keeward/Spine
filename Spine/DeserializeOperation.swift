@@ -28,6 +28,9 @@ class DeserializeOperation: Operation {
 	fileprivate var extractedLinks: [String: URL]?
 	fileprivate var extractedJSONAPI: [String: Any]?
 	fileprivate var resourcePool: [Resource] = []
+
+    // Options
+    fileprivate var options: DeserializationOptions?
 	
 	// Output
 	var result: Failable<JSONAPIDocument, SerializerError>?
@@ -35,11 +38,12 @@ class DeserializeOperation: Operation {
 	
 	// MARK: -
 	
-	init(data: Data, resourceFactory: ResourceFactory, valueFormatters: ValueFormatterRegistry, keyFormatter: KeyFormatter) {
+  init(data: Data, resourceFactory: ResourceFactory, valueFormatters: ValueFormatterRegistry, keyFormatter: KeyFormatter, options: DeserializationOptions? = nil) {
 		self.data = JSON(data: data)
 		self.resourceFactory = resourceFactory
 		self.valueFormatters = valueFormatters
 		self.keyFormatter = keyFormatter
+    self.options = options
 	}
 
 	
