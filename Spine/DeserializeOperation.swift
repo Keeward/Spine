@@ -188,6 +188,7 @@ class DeserializeOperation: Operation {
 		// Extract data
 		resource.id = id
 		resource.url = representation["links"]["self"].url
+    resource.links = representation["links"].dictionaryObject
 		resource.meta = representation["meta"].dictionaryObject
 		extractAttributes(from: representation, intoResource: resource)
 		extractRelationships(from: representation, intoResource: resource)

@@ -93,6 +93,9 @@ open class Resource: NSObject, NSCoding {
 	
 	/// The canonical URL of the resource.
 	public var url: URL?
+  
+  /// The links of the resource.
+  public var links: [String: Any]?
 	
 	/// Whether the fields of the resource are loaded.
 	public var isLoaded: Bool = false
@@ -111,6 +114,7 @@ open class Resource: NSObject, NSCoding {
 		super.init()
 		self.id = coder.decodeObject(forKey: "id") as? String
 		self.url = coder.decodeObject(forKey: "url") as? URL
+    self.links = coder.decodeObject(forKey: "links") as? [String: AnyObject]
 		self.isLoaded = coder.decodeBool(forKey: "isLoaded")
 		self.meta = coder.decodeObject(forKey: "meta") as? [String: AnyObject]
 		
@@ -125,6 +129,7 @@ open class Resource: NSObject, NSCoding {
 	open func encode(with coder: NSCoder) {
 		coder.encode(id, forKey: "id")
 		coder.encode(url, forKey: "url")
+    coder.encode(links, forKey: "links")
 		coder.encode(isLoaded, forKey: "isLoaded")
 		coder.encode(meta, forKey: "meta")
 		
