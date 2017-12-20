@@ -139,7 +139,7 @@ class DeserializeOperation: Operation {
 			extractedLinks = [:]
 			
 			for (key, value) in links {
-				extractedLinks![key] = URL(string: value.stringValue)!
+				extractedLinks![key] = URL(string: value.stringValue)
 			}
 		}
 		
